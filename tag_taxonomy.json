@@ -1,0 +1,99 @@
+{
+  "version": 1,
+  "categories": {
+    "domain": {
+      "description": "Research domains and fields",
+      "tags": [
+        "plant-phenotyping",
+        "plant-breeding",
+        "crop-science",
+        "computer-vision",
+        "deep-learning",
+        "remote-sensing",
+        "natural-language-processing",
+        "precision-agriculture",
+        "plant-growth-modeling",
+        "climate-adaptation",
+        "weed-detection",
+        "genetics"
+      ]
+    },
+    "method": {
+      "description": "Research methods and techniques",
+      "tags": [
+        "image-segmentation",
+        "object-detection",
+        "semantic-segmentation",
+        "instance-segmentation",
+        "3d-point-cloud",
+        "vegetation-index",
+        "transformer-architecture",
+        "convolutional-neural-network",
+        "transfer-learning",
+        "vision-language-model",
+        "statistical-modeling",
+        "multi-environment-trial",
+        "time-series-analysis",
+        "uav-imagery"
+      ]
+    },
+    "application": {
+      "description": "Specific application areas",
+      "tags": [
+        "leaf-analysis",
+        "fruit-detection",
+        "crop-monitoring",
+        "biomass-estimation",
+        "leaf-area-index",
+        "species-identification",
+        "color-analysis",
+        "yield-prediction",
+        "growth-tracking",
+        "literature-synthesis"
+      ]
+    },
+    "model-architecture": {
+      "description": "Specific model families and architectures",
+      "tags": [
+        "yolo",
+        "ssd",
+        "retinanet",
+        "resnet",
+        "vgg",
+        "detr",
+        "swin-transformer",
+        "clip",
+        "florence",
+        "linknet",
+        "feature-pyramid-network",
+        "bert"
+      ]
+    },
+    "crop": {
+      "description": "Crop species studied",
+      "tags": [
+        "wheat",
+        "maize",
+        "rapeseed",
+        "barley",
+        "tomato",
+        "grapevine",
+        "canola",
+        "cauliflower-broccoli",
+        "cabbage",
+        "turfgrass",
+        "kalanchoe"
+      ]
+    },
+    "status": {
+      "description": "Reading and usage status",
+      "tags": [
+        "to-read",
+        "reading",
+        "read",
+        "reference",
+        "key-paper"
+      ]
+    }
+  }
+}
