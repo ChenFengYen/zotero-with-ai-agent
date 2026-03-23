@@ -1,8 +1,8 @@
 # Zotero AI Agent
 
-使用 pyzotero + Claude CLI 管理 Zotero 文獻庫的命令列工具。
+使用 pyzotero 管理 Zotero 文獻庫的命令列工具。
 
-核心策略：**扁平化文獻管理** — 將深層巢狀 collections 轉為「兩層 collections + 多維 tags」，搭配 AI 驅動的 tag taxonomy 確保標記一致性。
+CLI 設計以資料庫操作模型為基礎：**CRUD + Join + Dump**，讓操作直覺對應到「我要做什麼」而非「我要操作哪種資源」。
 
 ## 安裝
 
@@ -13,7 +13,6 @@ pip install -r requirements.txt
 依賴：
 - [pyzotero](https://github.com/urschrei/pyzotero) — Zotero API 客戶端
 - [python-dotenv](https://github.com/theskumar/python-dotenv) — 環境變數管理
-- [Claude CLI](https://docs.anthropic.com/en/docs/claude-code) — AI 功能需要（taxonomy 建立、自動標記）
 
 ## 設定
 
@@ -23,125 +22,87 @@ pip install -r requirements.txt
 ZOTERO_API_KEY=your_api_key
 ZOTERO_LIBRARY_ID=your_library_id
 ZOTERO_LIBRARY_TYPE=user
-ZOTFILE_DIR=C:\path\to\zotfile\pdfs
 ```
 
 - API Key 從 [Zotero Settings](https://www.zotero.org/settings/keys) 取得
 - Library ID 從 [Zotero Groups/Library](https://www.zotero.org/settings/keys) 頁面取得
-- `ZOTFILE_DIR` 為 ZotFile 管理的 PDF 目錄，供 PDF 分析功能使用
 
 ## 使用方式
 
 所有寫入操作支援 `--dry-run` 預覽模式。
 
-### 文獻 CRUD
+### READ — 查詢
 
 ```bash
-python zotero_agent.py items list [-n 25]           # 列出最近文獻
-python zotero_agent.py items search <query>          # 搜尋文獻
-python zotero_agent.py items get <key>               # 取得文獻詳細資料
-python zotero_agent.py items create <type> <title>   # 建立文獻
-python zotero_agent.py items update <key> field=val   # 更新文獻欄位
-python zotero_agent.py items delete <key>            # 刪除文獻
+python zotero_agent.py read search <query>       # 搜尋文獻
+python zotero_agent.py read get <key>             # 取得文獻詳細 metadata
+python zotero_agent.py read tree                  # 樹狀結構顯示 collections
+python zotero_agent.py read list <col_key>        # 列出 collection 內文獻
+python zotero_agent.py read tags                  # 列出所有 tags
+python zotero_agent.py read tags <tag>            # 列出某 tag 下的文獻
 ```
 
-### Collection 操作
+### CREATE — 新增
 
 ```bash
-python zotero_agent.py col list                      # 列出所有 collections
-python zotero_agent.py col tree                      # 樹狀結構顯示
-python zotero_agent.py col items <key>               # 列出 collection 內文獻
-python zotero_agent.py col create <name> [--parent <key>]
-python zotero_agent.py col delete <key>              # 刪除 collection（保留文獻）
-python zotero_agent.py col rename <key> <new_name>
-python zotero_agent.py col move <key> [--parent <key>]
-python zotero_agent.py col add-item <col_key> <item_key>
-python zotero_agent.py col rm-item <col_key> <item_key>
-python zotero_agent.py col flatten [--dry-run]       # 扁平化到兩層
+python zotero_agent.py create item <type> <title>          # 建立文獻
+python zotero_agent.py create col <name> [--parent <key>]  # 建立 collection
+python zotero_agent.py create tag <item_key> <tag1> [...]  # 為文獻加 tags
 ```
 
-### Tag 操作
+### UPDATE — 更新
 
 ```bash
-python zotero_agent.py tag list                              # 列出所有 tags
-python zotero_agent.py tag list-items <tag>                   # 列出 tag 下的文獻
-python zotero_agent.py tag add <item_key> <tag1> [tag2 ...]   # 加 tags
-python zotero_agent.py tag remove <item_key> <tag1> [...]     # 移除 tags
-python zotero_agent.py tag rename <old> <new>                 # 全域重命名 tag
-python zotero_agent.py tag delete <tag>                       # 全域刪除 tag
+python zotero_agent.py update rename col <key> <new_name>  # 重新命名 collection
+python zotero_agent.py update rename tag <old> <new>       # 全域重命名 tag
+python zotero_agent.py update move <col_key> [--parent <key>]  # 移動 collection
+python zotero_agent.py update tag <item_key> <old> <new>   # 替換文獻的 tag
+python zotero_agent.py update item <key> field=value       # 更新文獻欄位
 ```
 
-### Tag Taxonomy（AI 驅動）
+### DELETE — 刪除
 
 ```bash
-python zotero_agent.py tag taxonomy build [-n 50]             # AI 分析文獻建立分類表
-python zotero_agent.py tag taxonomy show                      # 顯示分類表
-python zotero_agent.py tag taxonomy edit add <category> <tag>  # 新增 tag 到分類
-python zotero_agent.py tag taxonomy edit remove <category> <tag>
+python zotero_agent.py delete item <key>          # 刪除文獻
+python zotero_agent.py delete col <key>           # 刪除 collection（保留文獻）
+python zotero_agent.py delete tag <tag>           # 全域刪除 tag
+python zotero_agent.py delete cleanup             # 掃描問題 collections
 ```
 
-Taxonomy 儲存在 `tag_taxonomy.json`，結構如下：
+`delete cleanup` 掃描三類問題：
+- `deleted=True` 的 collections（桌面端刪除但伺服器殘留）
+- 空的 leaf collections（無文獻、無子 collection）
+- 重複名稱的 collections
 
-```json
-{
-  "version": 1,
-  "categories": {
-    "domain":  { "description": "研究領域", "tags": ["deep-learning", "plant-phenotyping", ...] },
-    "method":  { "description": "研究方法", "tags": ["image-segmentation", "transfer-learning", ...] },
-    "status":  { "description": "閱讀狀態", "tags": ["to-read", "reading", "read", "reference"] }
-  }
-}
-```
-
-### AI 自動標記
+### JOIN — 多篇比較
 
 ```bash
-python zotero_agent.py tag auto <item_key> [--yes]            # 單篇自動標記
-python zotero_agent.py tag auto-batch <collection_key> [--yes] # 批次自動標記
+python zotero_agent.py join <key1> <key2> [...]   # 並列比較多篇文獻 metadata
 ```
 
-- Claude 分析文獻的 metadata 和 PDF 內容，從 taxonomy 中建議 tags
-- 預設需用戶確認，`--yes` 跳過確認
-- 只會建議 taxonomy 中已註冊的 tags
+逐欄位（標題、作者、日期、期刊、tags、摘要）顯示比較，適合評估相關文獻的異同。
 
-### PDF 分析
+### DUMP — 匯出引用
 
 ```bash
-python zotero_agent.py pdf find <citekey>                     # 尋找 PDF 檔案
-python zotero_agent.py analyze <key> [-p "prompt"] [--first-page]  # Claude 分析 PDF
+python zotero_agent.py dump "<query>" [--fmt list]     # 搜尋並匯出引用清單
+python zotero_agent.py dump <key1> <key2> --fmt bibtex  # 指定文獻匯出 BibTeX
+python zotero_agent.py dump "<query>" --fmt keys        # 只輸出 item keys
 ```
 
-## 扁平化策略
+支援格式：
+- `list`（預設）— 人類可讀的引用格式
+- `bibtex` — BibTeX 格式
+- `keys` — 僅 Zotero keys（適合 pipe 到其他指令）
 
-`col flatten` 將 depth >= 2 的 collections 拍平，處理流程（由最深層往上）：
+## 已知限制
 
-1. 將 collection 名稱轉為 tag（加前綴 `col:`，如 `col:YOLO`）
-2. 為該 collection 內所有文獻加上此 tag
-3. 將文獻移到 depth-1 的祖先 collection
-4. 刪除該 collection
+- `read search ""` 預設只回傳 100 筆（pyzotero 預設 limit）
+- `read list <key>` 只查直屬 items，不含子 collection
+- Windows 終端需加 `PYTHONIOENCODING=utf-8` 避免 cp950 編碼錯誤
+- citekey 由 Better BibTeX 插件管理，無法透過 API 直接取得
 
-好處：
-- 文獻可透過多個 tag 交叉查詢，不受單一 collection 路徑限制
-- 保留原始組織資訊（`col:` 前綴 tag 可追溯來源）
-- 兩層 collections 維持大分類可瀏覽性
+## 注意事項
 
-## 典型工作流程
-
-```bash
-# 1. 初次設定：建立 tag taxonomy
-python zotero_agent.py tag taxonomy build -n 50
-
-# 2. 扁平化現有 collections
-python zotero_agent.py col flatten --dry-run    # 先預覽
-python zotero_agent.py col flatten              # 確認後執行
-
-# 3. 為現有文獻自動標記
-python zotero_agent.py tag auto-batch <collection_key> --yes
-
-# 4. 日常：新文獻加入後手動標記
-python zotero_agent.py tag auto <item_key> --yes
-```
-
-## 未來規劃
-
-參見 [TODO.md](TODO.md)。
+- 所有寫入操作（create, update, delete）需使用者確認後才執行
+- `delete cleanup` 只做掃描報告，不會自動刪除任何東西
