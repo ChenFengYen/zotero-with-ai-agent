@@ -8,6 +8,13 @@ import sys
 from collections import Counter
 from pathlib import Path
 
+# Force UTF-8 on stdout/stderr (Windows default cp950 cannot encode many chars).
+for _stream in (sys.stdout, sys.stderr):
+    try:
+        _stream.reconfigure(encoding="utf-8", errors="replace")
+    except (AttributeError, ValueError):
+        pass
+
 from dotenv import load_dotenv
 from pyzotero import zotero
 
@@ -609,7 +616,14 @@ def main():
             remove_tags_from_item(args.key, [args.old_tag])
             add_tags_to_item(args.key, [args.new_tag])
         elif action == "item":
-            fields = dict(f.split("=", 1) for f in args.fields)
+            raw = dict(f.split("=", 1) for f in args.fields)
+            fields = {}
+            for k, v in raw.items():
+                try:
+                    import json
+                    fields[k] = json.loads(v)
+                except (json.JSONDecodeError, ValueError):
+                    fields[k] = v
             update_item(args.key, **fields)
         else:
             parser.parse_args(["update", "--help"])

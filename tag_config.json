@@ -1,0 +1,180 @@
+{
+  "version": 2,
+  "description": "Unified tag configuration for Zotero library. Used by suggest_tags.py (OpenAlex mapping) and as the canonical tag taxonomy.",
+
+  "tags": {
+    "detection":                 {"category": "method",    "openalex": ["Object detection"]},
+    "segmentation":              {"category": "method",    "openalex": ["Segmentation", "Image segmentation"]},
+    "semantic-segmentation":     {"category": "method"},
+    "instance-segmentation":     {"category": "method"},
+    "leaf-segmentation":         {"category": "method"},
+    "image-processing":          {"category": "method",    "openalex": ["Image processing"]},
+    "feature-extraction":        {"category": "method",    "openalex": ["Feature extraction"]},
+    "pattern-recognition":       {"category": "method",    "openalex": ["Pattern recognition (psychology)"]},
+    "CNN":                       {"category": "method",    "openalex": ["Convolutional neural network"]},
+    "deep-learning":             {"category": "method",    "openalex": ["Deep learning", "Artificial neural network"]},
+    "machine-learning":          {"category": "method",    "openalex": ["Machine learning"]},
+    "transfer-learning":         {"category": "method"},
+    "knowledge-distillation":    {"category": "method"},
+    "unsupervised-learning":     {"category": "method",    "openalex": ["Unsupervised learning"]},
+    "real-time":                 {"category": "method",    "openalex": ["Real-time computing"]},
+    "remote-sensing":            {"category": "method",    "openalex": ["Remote sensing"]},
+    "hyperspectral":             {"category": "method",    "openalex": ["Hyperspectral imaging"]},
+    "rgb":                       {"category": "method",    "openalex": ["RGB color model"]},
+    "ground-truth":              {"category": "method",    "openalex": ["Ground truth"]},
+    "point-cloud":               {"category": "method",    "openalex": ["Point cloud"]},
+    "PCA":                       {"category": "method",    "openalex": ["Principal component analysis"]},
+    "digital-image-analysis":    {"category": "method",    "openalex": ["Digital image analysis"]},
+    "color-normalization":       {"category": "method",    "openalex": ["Color normalization"]},
+    "color-constancy":           {"category": "method",    "openalex": ["Color constancy"]},
+    "color-analysis":            {"category": "method"},
+    "statistical-modeling":      {"category": "method"},
+    "multi-environment-trial":   {"category": "method"},
+    "time-series-analysis":      {"category": "method"},
+    "uav-imagery":               {"category": "method"},
+    "3d-point-cloud":            {"category": "method"},
+    "vegetation-index":          {"category": "method"},
+    "transformer-architecture":  {"category": "method"},
+    "stereo-imaging":            {"category": "method"},
+
+    "plant-phenotyping":         {"category": "domain"},
+    "plant-breeding":            {"category": "domain",    "openalex": ["Plant breeding"]},
+    "crop-science":              {"category": "domain"},
+    "computer-vision":           {"category": "domain"},
+    "precision-agriculture":     {"category": "domain",    "openalex": ["Precision agriculture"]},
+    "natural-language-processing":{"category": "domain"},
+    "plant-growth-modeling":     {"category": "domain"},
+    "climate-adaptation":        {"category": "domain"},
+    "weed-detection":            {"category": "domain"},
+    "genomics":                  {"category": "domain",    "openalex": ["Genomics"]},
+    "functional-genomics":       {"category": "domain",    "openalex": ["Functional genomics"]},
+    "phenomics":                 {"category": "domain",    "openalex": ["Phenomics"]},
+
+    "leaf-analysis":             {"category": "application"},
+    "leaf-counting":             {"category": "application"},
+    "leaf-morphology":           {"category": "application"},
+    "leaf-area":                 {"category": "application"},
+    "leaf-angle":                {"category": "application"},
+    "fruit-detection":           {"category": "application"},
+    "crop-monitoring":           {"category": "application"},
+    "biomass-estimation":        {"category": "application"},
+    "LAI":                       {"category": "application", "openalex": ["Leaf area index"]},
+    "species-identification":    {"category": "application"},
+    "yield-prediction":          {"category": "application"},
+    "growth-tracking":           {"category": "application"},
+    "root-phenotyping":          {"category": "application"},
+
+    "yolo":                      {"category": "model"},
+    "ssd":                       {"category": "model"},
+    "retinanet":                 {"category": "model"},
+    "resnet":                    {"category": "model"},
+    "vgg":                       {"category": "model"},
+    "detr":                      {"category": "model"},
+    "swin-transformer":          {"category": "model"},
+    "clip":                      {"category": "model"},
+    "florence":                  {"category": "model"},
+    "linknet":                   {"category": "model"},
+    "feature-pyramid-network":   {"category": "model"},
+    "bert":                      {"category": "model"},
+
+    "arabidopsis":               {"category": "species",   "openalex": ["Arabidopsis thaliana", "Arabidopsis"]},
+    "wheat":                     {"category": "species"},
+    "maize":                     {"category": "species"},
+    "rapeseed":                  {"category": "species",   "openalex": ["Rapeseed"]},
+    "barley":                    {"category": "species"},
+    "tomato":                    {"category": "species"},
+    "grapevine":                 {"category": "species"},
+    "canola":                    {"category": "species",   "openalex": ["Canola"]},
+    "cauliflower-broccoli":      {"category": "species"},
+    "cabbage":                   {"category": "species"},
+    "turfgrass":                 {"category": "species"},
+    "kalanchoe":                 {"category": "species",   "openalex": ["Kalanchoe"]},
+    "sorghum":                   {"category": "species",   "openalex": ["Sorghum"]},
+    "brassica":                  {"category": "species",   "openalex": ["Brassica"]},
+    "brassica-rapa":             {"category": "species",   "openalex": ["Brassica rapa"]},
+    "setaria":                   {"category": "species",   "openalex": ["Setaria"]},
+    "setaria-viridis":           {"category": "species",   "openalex": ["Setaria viridis"]},
+    "orchid":                    {"category": "species",   "openalex": ["Orchidaceae"]},
+    "rice":                      {"category": "species"},
+    "ipomoea":                   {"category": "species",   "openalex": ["Ipomoea"]},
+
+    "photosynthesis":            {"category": "physiology", "openalex": ["Photosynthesis"]},
+    "chlorophyll-fluorescence":  {"category": "physiology", "openalex": ["Chlorophyll fluorescence"]},
+    "stomatal-conductance":      {"category": "physiology", "openalex": ["Stomatal conductance"]},
+    "abiotic-stress":            {"category": "physiology", "openalex": ["Abiotic stress"]},
+    "drought-tolerance":         {"category": "physiology", "openalex": ["Drought tolerance"]},
+    "CAM":                       {"category": "physiology", "openalex": ["Crassulacean acid metabolism"]},
+    "VPD":                       {"category": "physiology", "openalex": ["Vapour Pressure Deficit"]},
+    "WUE":                       {"category": "physiology", "openalex": ["Water-use efficiency"]},
+    "abscisic-acid":             {"category": "physiology", "openalex": ["Abscisic acid"]},
+    "heat-stress":               {"category": "physiology"},
+    "drought-stress":            {"category": "physiology"},
+    "salt-stress":               {"category": "physiology"},
+    "genetic-diversity":         {"category": "physiology", "openalex": ["Genetic diversity"]},
+
+    "to-read":                   {"category": "status"},
+    "reading":                   {"category": "status"},
+    "read":                      {"category": "status"},
+    "reference":                 {"category": "status"},
+    "key-paper":                 {"category": "status"},
+    "review":                    {"category": "status"},
+    "concept-support":           {"category": "status"}
+  },
+
+  "categories": {
+    "method":      {"description": "Research methods and techniques"},
+    "domain":      {"description": "Research domains and fields"},
+    "application": {"description": "Specific application areas"},
+    "model":       {"description": "Specific model families and architectures"},
+    "species":     {"description": "Plant/crop species studied"},
+    "physiology":  {"description": "Plant physiology concepts"},
+    "status":      {"description": "Reading and usage status"}
+  },
+
+  "openalex_skip": {
+    "_comment": "OpenAlex concepts to always ignore. Grouped by reason.",
+
+    "broad_disciplines": [
+      "Computer science", "Mathematics", "Engineering", "Medicine",
+      "Chemistry", "Physics", "Statistics", "Biology", "Botany",
+      "Ecology", "Genetics", "Biochemistry", "Horticulture", "Agronomy"
+    ],
+
+    "too_generic": [
+      "Productivity", "Crop productivity", "Workflow", "Nucleus", "Hormone",
+      "Generalization", "Protein", "Gene", "Cell", "Tissue", "Trait",
+      "Population", "Software", "Cultivar", "Genome", "Crop", "Agriculture",
+      "Phenotype", "Genotype", "Inference", "Computation", "Scaling",
+      "Encoder", "Residual", "Pixel", "Architecture", "Estimation",
+      "Regression", "Implementation", "Annotation", "Training set",
+      "Limiting", "Seedling"
+    ],
+
+    "wrong_sense": [
+      "Codebook", "Dirt", "Firmware", "Initialization", "Research article",
+      "Asynchronous communication", "Corporate governance", "Scrutiny",
+      "Scarcity", "Software deployment", "Conceptualization",
+      "Operationalization", "Testbed", "Fortran", "Extractor", "Reuse",
+      "Reusability", "Digital image", "Morpho", "Darkness", "Saline"
+    ],
+
+    "contextually_meaningless": [
+      "Khyber pakhtunkhwa", "Generative grammar", "Sky", "Row", "Ranging",
+      "Shoot", "Pairwise comparison", "Computational complexity theory",
+      "Benchmarking", "Amodal perception", "Discriminative model",
+      "Nonparametric statistics"
+    ],
+
+    "wikidata_disambiguation": [
+      "Bridging (networking)", "Tracking (education)", "Movement (music)",
+      "Displacement (psychology)", "Field (mathematics)", "Root (linguistics)",
+      "Bottleneck", "Throughput", "Pipeline (computing)",
+      "Ranking (information retrieval)", "Embedding", "Projection (mathematics)",
+      "Overhead (computing)", "End-to-end principle", "Transfer of learning"
+    ],
+
+    "redundant_with_mapped": [
+      "Phenome", "Abiotic component", "Scale-space segmentation"
+    ]
+  }
+}
