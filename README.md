@@ -14,6 +14,21 @@ pip install -r requirements.txt
 - [pyzotero](https://github.com/urschrei/pyzotero) — Zotero API 客戶端
 - [python-dotenv](https://github.com/theskumar/python-dotenv) — 環境變數管理
 
+## 軟體版本
+
+實際使用的組合（2026-10-30 從本機安裝檔與 Zotero profile 的 `extensions.json` 讀出）：
+
+| 軟體 | 版本 | 備註 |
+|---|---|---|
+| Zotero 桌面版 | 6.0.36 | **不要升級到 7**，見下方 |
+| ZotFile | 5.1.2 | 宣告相容範圍 Zotero 5.0.0–6.\*，是卡住 Zotero 版本的那一個 |
+| Better BibTeX | 6.7.267 | 宣告相容 Zotero 6.0.9–7.\*；citekey 已 pin 進 Extra 的 `Citation Key:` |
+| Python | 3.11.7 | Anaconda base |
+| pyzotero | 1.10.0 | |
+| python-dotenv | 0.21.0 | |
+
+本工具透過 pyzotero 走 Zotero **Web API**，腳本本身不直接依賴桌面版版本；版本限制來自周邊流程：PDF 的改名與歸檔由 ZotFile 負責，而 ZotFile 不支援 Zotero 7 以上。Zotero 6 也沒有本機 API（2026-10-21 實測 `localhost:23119/api` 回 404），所以不能改走本機。要升級 Zotero 7，必須先決定 PDF 改名由誰接手。
+
 ## 設定
 
 在專案根目錄建立 `.env`：
@@ -109,13 +124,10 @@ python import_papers.py --file dois.txt --collection <key> --tags tag1,tag2
 # 標題搜尋，人工選擇後匯入
 python import_papers.py --search "plant growth dynamics" --collection <key>
 
-# 匯入 metadata + 下載 OA PDF
-python import_papers.py --doi 10.xxxx/xxxxx --pdf --collection <key>
-
-# 批量匯入 + PDF，指定輸出目錄
+# 匯入 metadata + 下載 OA PDF（必須指定輸出目錄）
 python import_papers.py --file dois.txt --pdf --pdf-dir /path/to/pdfs
 
-# 預覽模式（含 PDF 來源探測）
+# 預覽模式（含 PDF 來源探測，不需 --pdf-dir）
 python import_papers.py --file dois.txt --pdf --dry-run
 ```
 
@@ -125,7 +137,7 @@ python import_papers.py --file dois.txt --pdf --dry-run
 
 ### PDF 下載 (`--pdf`)
 
-加上 `--pdf` 後，匯入 metadata 同時嘗試下載 OA PDF 至 `OV-Papers/PDF-raw/{citekey}.pdf`。
+PDF 平常由 Zotero＋ZotFile 管理，`--pdf` 只在需要另外抓 OA 全文時使用。加上 `--pdf` 後，匯入 metadata 同時嘗試下載 OA PDF 至 `--pdf-dir` 指定的目錄（`{citekey}.pdf`）；沒有預設目錄，未指定就直接報錯。`--dry-run` 只探測來源、不寫檔，可以不給 `--pdf-dir`。
 
 PDF 來源備援鏈（依序嘗試）：
 1. **Unpaywall** — `url_for_pdf` 直接下載（最快，但常為 null）

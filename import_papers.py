@@ -19,13 +19,10 @@ Usage:
     # Add tags during import
     python import_papers.py --doi 10.34133/2020/7481687 --tags growth-modeling,time-series
 
-    # Download PDF alongside metadata import
-    python import_papers.py --doi 10.34133/2020/7481687 --pdf
-
-    # Download PDF to a specific directory
+    # Download OA PDF alongside metadata import (--pdf-dir is required)
     python import_papers.py --doi 10.34133/2020/7481687 --pdf --pdf-dir /path/to/pdfs
 
-    # Dry run (preview without importing)
+    # Dry run (preview without importing; probes PDF sources, needs no --pdf-dir)
     python import_papers.py --file dois.txt --pdf --dry-run
 """
 
@@ -58,7 +55,7 @@ LIBRARY_TYPE = os.getenv("ZOTERO_LIBRARY_TYPE", "user")
 # Polite pool: CrossRef asks for an email for priority access
 CROSSREF_EMAIL = os.getenv("CROSSREF_EMAIL", "")
 
-USER_AGENT = "ZoteroAIAgent/1.0 (https://github.com/user/zotero-ai-agent)"
+USER_AGENT = "ZoteroAIAgent/1.0 (https://github.com/ChenFengYen/zotero-with-ai-agent)"
 
 
 def _zot():
@@ -229,11 +226,9 @@ def openalex_to_crossref_doi(oa_result):
 PDF_MIN_SIZE = 50_000       # 50 KB — smaller is likely an error page
 PDF_MAX_SIZE = 100_000_000  # 100 MB — larger is likely a dataset/supplement bundle
 
-# Default PDF output directory
-DEFAULT_PDF_DIR = os.path.join(
-    os.path.dirname(os.path.dirname(os.path.abspath(__file__))),
-    "OV-Papers", "PDF-raw",
-)
+# No default PDF output directory: a path relative to this script once wrote
+# into whatever folder happened to contain it. PDFs normally enter through
+# Zotero + ZotFile; --pdf-dir is an explicit opt-out.
 
 
 def _generate_citekey(item_data):
@@ -460,11 +455,11 @@ def download_pdf_for_item(item_data, pdf_dir=None, dry_run=False):
         return None
 
     citekey = _generate_citekey(item_data)
-    out_dir = pdf_dir or DEFAULT_PDF_DIR
-    out_path = os.path.join(out_dir, f"{citekey}.pdf")
+    out_dir = pdf_dir
+    out_path = os.path.join(out_dir, f"{citekey}.pdf") if out_dir else None
 
     # Check if already exists
-    if os.path.exists(out_path):
+    if out_path and os.path.exists(out_path):
         print(f"  PDF: already exists: {citekey}.pdf")
         return out_path
 
@@ -729,7 +724,7 @@ def build_parser():
     parser.add_argument("--pdf", action="store_true",
                         help="Download OA PDF (Unpaywall → Semantic Scholar → Europe PMC → PMC OA)")
     parser.add_argument("--pdf-dir",
-                        help=f"PDF output directory (default: {DEFAULT_PDF_DIR})")
+                        help="PDF output directory (required with --pdf unless --dry-run)")
 
     return parser
 
@@ -737,6 +732,8 @@ def build_parser():
 def main():
     parser = build_parser()
     args = parser.parse_args()
+    if args.pdf and not args.pdf_dir and not args.dry_run:
+        parser.error("--pdf needs --pdf-dir; PDFs normally go through Zotero + ZotFile")
 
     zot = _zot()
     tags = [t.strip() for t in args.tags.split(",")] if args.tags else None

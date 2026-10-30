@@ -25,9 +25,11 @@ Tag 配置已外部化至 `tag_config.json`，新增/調整映射不需改程式
 
 進度：✅ 五步全部完成（2026-10-30）。第 1 步 `99fbc3a`；第 2 步搬到此處並設 `ZOTERO_AGENT_DIR=C:/Users/ChenFengYen/zotero-ai-agent`；第 3 步 vault 9 檔 56 處已改；第 4 步 `read tree`、`suggest_tags --dry-run`、`vault_health --zotero` 從新位置實跑皆正常；第 5 步 vault 內舊副本、`.gitignore` 排除行已刪，`CLAUDE_HISTORY` v2.22 已記。
 
-### `import_papers.py --pdf` 停用或改寫
+### `import_papers.py --pdf` 停用或改寫 ✅（2026-10-30）
 
-預設路徑寫死 `OV-Papers/PDF-raw`（07-31 已改名），執行會在 vault 根目錄建資料夾並被 obsidian-git 推送；檔名不是 BBT citekey，也不會掛到 Zotero 條目上。方向：PDF 一律交給 Zotero＋ZotFile。
+預設路徑寫死 `OV-Papers/PDF-raw`（07-31 已改名），是「腳本上一層目錄」的相對路徑：放在 vault 時寫進 vault 根目錄並被 obsidian-git 推送，搬出 vault 後改寫進家目錄。檔名不是 BBT citekey，也不會掛到 Zotero 條目上。方向：PDF 一律交給 Zotero＋ZotFile。
+
+已改：刪除預設目錄，`--pdf` 實際下載時必須給 `--pdf-dir`，否則報錯；`--pdf --dry-run` 只探測來源，照舊可用。
 
 ## Planned Features
 

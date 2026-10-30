@@ -46,7 +46,7 @@ LIBRARY_ID = os.getenv("ZOTERO_LIBRARY_ID")
 LIBRARY_TYPE = os.getenv("ZOTERO_LIBRARY_TYPE", "user")
 CROSSREF_EMAIL = os.getenv("CROSSREF_EMAIL", "")
 
-USER_AGENT = "ZoteroAIAgent/1.0 (https://github.com/user/zotero-ai-agent)"
+USER_AGENT = "ZoteroAIAgent/1.0 (https://github.com/ChenFengYen/zotero-with-ai-agent)"
 
 # Default filter thresholds
 DEFAULT_MIN_SCORE = 0.4
