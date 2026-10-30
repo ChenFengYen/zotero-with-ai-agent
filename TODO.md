@@ -21,7 +21,9 @@ Tag 配置已外部化至 `tag_config.json`，新增/調整映射不需改程式
 4. 實跑 `read tree`、`suggest_tags --dry-run`、`vault_health --zotero` 驗證
 5. vault `CLAUDE_HISTORY` 記一句；刪 vault `.gitignore` 的排除行
 
-未確認：.160 是否也在用這些 skill（vault 不同步本目錄）
+.160 不使用 `/suggest-tags`、`/classify-ref`（使用者 10-21 確認），環境變數只需在 .154 設定。
+
+進度：✅ 五步全部完成（2026-10-30）。第 1 步 `99fbc3a`；第 2 步搬到此處並設 `ZOTERO_AGENT_DIR=C:/Users/ChenFengYen/zotero-ai-agent`；第 3 步 vault 9 檔 56 處已改；第 4 步 `read tree`、`suggest_tags --dry-run`、`vault_health --zotero` 從新位置實跑皆正常；第 5 步 vault 內舊副本、`.gitignore` 排除行已刪，`CLAUDE_HISTORY` v2.22 已記。
 
 ### `import_papers.py --pdf` 停用或改寫
 
