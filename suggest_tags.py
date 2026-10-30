@@ -8,7 +8,7 @@ Usage:
     python suggest_tags.py --untagged --dry-run
 
     # Preview for a specific collection
-    python suggest_tags.py --collection Z3K94YXB --dry-run
+    python suggest_tags.py --collection <COLLECTION_KEY> --dry-run
 
     # Preview for specific items by key
     python suggest_tags.py --keys ABC12345 DEF67890 --dry-run

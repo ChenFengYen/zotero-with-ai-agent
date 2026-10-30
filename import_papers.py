@@ -14,7 +14,7 @@ Usage:
     python import_papers.py --search "plant growth dynamics phenotyping"
 
     # Specify target collection
-    python import_papers.py --doi 10.34133/2020/7481687 --collection Z3K94YXB
+    python import_papers.py --doi 10.34133/2020/7481687 --collection <COLLECTION_KEY>
 
     # Add tags during import
     python import_papers.py --doi 10.34133/2020/7481687 --tags growth-modeling,time-series

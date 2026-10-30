@@ -16,18 +16,18 @@ pip install -r requirements.txt
 
 ## 軟體版本
 
-實際使用的組合（2026-10-30 從本機安裝檔與 Zotero profile 的 `extensions.json` 讀出）：
+測試過的組合（2026-10-30）。相容範圍取自各外掛在 Zotero profile `extensions.json` 的宣告：
 
 | 軟體 | 版本 | 備註 |
 |---|---|---|
-| Zotero 桌面版 | 6.0.36 | **不要升級到 7**，見下方 |
-| ZotFile | 5.1.2 | 宣告相容範圍 Zotero 5.0.0–6.\*，是卡住 Zotero 版本的那一個 |
-| Better BibTeX | 6.7.267 | 宣告相容 Zotero 6.0.9–7.\*；citekey 已 pin 進 Extra 的 `Citation Key:` |
-| Python | 3.11.7 | Anaconda base |
+| Zotero 桌面版 | 6.0.36 | 搭配 ZotFile 時不能升級到 7，見下方 |
+| ZotFile | 5.1.2 | 宣告相容 Zotero 5.0.0–6.\*，是卡住 Zotero 版本的那一個 |
+| Better BibTeX | 6.7.267 | 宣告相容 Zotero 6.0.9–7.\*；建議 pin citekey，key 會寫進 Extra 的 `Citation Key:` 行 |
+| Python | 3.11.7 | |
 | pyzotero | 1.10.0 | |
 | python-dotenv | 0.21.0 | |
 
-本工具透過 pyzotero 走 Zotero **Web API**，腳本本身不直接依賴桌面版版本；版本限制來自周邊流程：PDF 的改名與歸檔由 ZotFile 負責，而 ZotFile 不支援 Zotero 7 以上。Zotero 6 也沒有本機 API（2026-10-21 實測 `localhost:23119/api` 回 404），所以不能改走本機。要升級 Zotero 7，必須先決定 PDF 改名由誰接手。
+本工具透過 pyzotero 走 Zotero **Web API**，腳本本身不依賴桌面版版本；版本限制來自周邊流程：若 PDF 的改名與歸檔交給 ZotFile，就停在 Zotero 6，因為 ZotFile 不支援 7 以上。Zotero 6 也沒有本機 API（`localhost:23119/api` 回 404），所以本工具一律走 Web API。不用 ZotFile 的使用者可以直接用 Zotero 7。
 
 ## 設定
 
@@ -209,3 +209,7 @@ python suggest_tags.py --untagged --min-score 0.5 --min-level 3 --max-tags 5
 
 - 所有寫入操作（create, update, delete）需使用者確認後才執行
 - `delete cleanup` 只做掃描報告，不會自動刪除任何東西
+
+## 授權
+
+MIT License，全文見 [LICENSE](LICENSE)。

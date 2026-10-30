@@ -4,38 +4,26 @@
 
 ### `suggest_tags.py` — OpenAlex 概念自動 tag 建議 ✅
 
-利用 OpenAlex concepts API 為文獻建議 tag，已通過 122 篇全量測試。
+利用 OpenAlex concepts API 為文獻建議 tag。Tag 配置外部化至 `tag_config.json`，新增或調整映射不需改程式碼。
 
-Tag 配置已外部化至 `tag_config.json`，新增/調整映射不需改程式碼。
+### 工具與知識庫分開存放 ✅
 
-## Decided (2026-10-21)
+本 repo 可以放在 Obsidian vault 之外，由環境變數 `ZOTERO_AGENT_DIR` 指向；搭配的 vault 工具（如 vault 健康檢查）透過這個變數找到 `.env`。放在 vault 裡時，必須用 vault 的 `.gitignore` 排除本目錄，否則 `.env` 會隨 vault 同步出去。
 
-### 搬出 vault，成為獨立目錄
+### `import_papers.py --pdf` 不再有預設下載目錄 ✅
 
-現況：放在 vault 根目錄，靠 vault `.gitignore` 排除；skill 與 vault_health 用相對路徑呼叫。
-
-順序：
-1. 先 commit 並推送（`import_papers.py`、`suggest_tags.py`、`tag_config.json` 從未進版控）
-2. 搬到 vault 外（如 `C:\Users\ChenFengYen\zotero-ai-agent\`），各機設環境變數 `ZOTERO_AGENT_DIR`
-3. vault 端改引用：兩個 skill、`settings.local.json`、`vault_health.py:513`、`TOOL_REFERENCE`、`LiteratureSearchGuide`
-4. 實跑 `read tree`、`suggest_tags --dry-run`、`vault_health --zotero` 驗證
-5. vault `CLAUDE_HISTORY` 記一句；刪 vault `.gitignore` 的排除行
-
-.160 不使用 `/suggest-tags`、`/classify-ref`（使用者 10-21 確認），環境變數只需在 .154 設定。
-
-進度：✅ 五步全部完成（2026-10-30）。第 1 步 `99fbc3a`；第 2 步搬到此處並設 `ZOTERO_AGENT_DIR=C:/Users/ChenFengYen/zotero-ai-agent`；第 3 步 vault 9 檔 56 處已改；第 4 步 `read tree`、`suggest_tags --dry-run`、`vault_health --zotero` 從新位置實跑皆正常；第 5 步 vault 內舊副本、`.gitignore` 排除行已刪，`CLAUDE_HISTORY` v2.22 已記。
-
-### `import_papers.py --pdf` 停用或改寫 ✅（2026-10-30）
-
-預設路徑寫死 `OV-Papers/PDF-raw`（07-31 已改名），是「腳本上一層目錄」的相對路徑：放在 vault 時寫進 vault 根目錄並被 obsidian-git 推送，搬出 vault 後改寫進家目錄。檔名不是 BBT citekey，也不會掛到 Zotero 條目上。方向：PDF 一律交給 Zotero＋ZotFile。
-
-已改：刪除預設目錄，`--pdf` 實際下載時必須給 `--pdf-dir`，否則報錯；`--pdf --dry-run` 只探測來源，照舊可用。
+預設目錄若從腳本位置推算，腳本一搬家，PDF 就跟著寫到錯的地方。現在 `--pdf` 實際下載時必須給 `--pdf-dir`；`--pdf --dry-run` 只探測來源，照舊可用。PDF 的主要入口仍是 Zotero（搭配 ZotFile 改名歸檔）。
 
 ## Planned Features
 
 ### 補 DOI 工具
 
-期刊論文 611 篇中 297 篇無 DOI（多為拖 PDF 入庫）。以標題＋第一作者＋年份查 Crossref，只接受高吻合結果，產審核表，使用者確認後才寫回。
+拖 PDF 入庫的文獻常沒有 DOI，而 `suggest_tags.py` 只吃 DOI，這些文獻因此拿不到 tag 建議。規則：
+
+- DOI 字串只能由程式從 API 回應取得，不經 LLM 生成。
+- 以標題＋第一作者姓＋年份（±1）查 CrossRef，全部吻合才列入審核表；可疑的交使用者判斷，查無留空。
+- arXiv 預印本直接用 `10.48550/arXiv.<id>`。
+- 產生審核表，使用者確認後才寫回 Zotero。
 
 ### tag_config.json 持續完善
 
